@@ -54,7 +54,7 @@
         function checkIsNumber(a, mensagemPersonalizada){
             while (isNaN(a) || a <= 0){
                 alert(`Valor incorreto. Insira um número\n`);
-                a = parseFloat(prompt(mensagemPersonalizada));
+                a = prompt(mensagemPersonalizada);
             }
             return a;
         }
