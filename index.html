@@ -4,8 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            line-height: 2em;
+            font-size: 2.5em;
+            gap: 40px;
+            background-color: #2c2f33;
+        }
+        
+        h1 {
+            color: 	#28a745;
+        }
+
+        div {
+            width: 1000px;
+            border: 2px solid black;    
+            padding: 20px;
+            border-radius: 20px;
+            background-color: #1f4e79;
+            color: #f8f9fa;
+        }
+
+        p {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        #resultado__calc__combustivel span {
+            color: #ffc107	;
+        }
+
+    </style>
 </head>
 <body>
-    <script src="javaScript/calc_combustivel.js"></script>    
+    <h1>Calculadora de Combustível</h1>
+    <div id="resultado__calc__combustivel"></div>
+    <script>
+        function checkIsNumber(a, mensagemPersonalizada){
+            while (isNaN(a) || a <= 0){
+                alert(`Valor incorreto. Insira um número\n`);
+                a = parseFloat(prompt(mensagemPersonalizada));
+            }
+            return a;
+        }
+
+
+    // Dados de entrada da distancia percorrida (Valor de deslocamento de casa até o trabalho)
+    let distancia_Percorrida = parseFloat(prompt("Qual a distância percorrida da sua casa até seu trabalho (em km)?"));
+    distancia_Percorrida = checkIsNumber(distancia_Percorrida, "Qual a distância percorrida da sua casa até seu trabalho (em km)?");
+
+    // Dados de entrada do consumo médio (Valor de consumo de combustível)
+    let consumo_Medio = parseFloat(prompt("Qual o consumo médio do seu veículo (em km/L)"));
+    consumo_Medio = checkIsNumber(consumo_Medio, "Qual o consumo médio do seu veículo (em km/L)");
+
+    // Cálculo de consumo necessário para o desclocamento.
+    let consumo_Necessario_Litros = distancia_Percorrida/consumo_Medio;
+    let consumoTexto;
+    switch (true){
+        case consumo_Necessario_Litros <= 0.9:
+            consumoTexto = consumo_Necessario_Litros.toFixed(1) + ' Litro';
+            break;
+
+        case consumo_Necessario_Litros === 1:
+            consumoTexto = consumo_Necessario_Litros.toFixed(0) + ' Litro';
+            break;
+
+        default:
+            consumoTexto = consumo_Necessario_Litros.toFixed(0) + ' Litros';
+    }
+    
+    alert(`O consumo necessário é de ${consumoTexto}`);
+
+    // Dados de entrada da quantidade de postos (Saber quantos postos foram analisados e o valor do combustível em cada um)
+    let quantidade_Postos = parseInt(prompt("Em quantos postos você pesquisou?"));
+    quantidade_Postos = checkIsNumber(quantidade_Postos, "Em quantos postos você pesquisou?");
+
+    // Estrutura de repetição para verificar o menor valor do combustível e realizar a soma de todos os valores digitados.
+    let menor_Valor_Pesquisado;
+    let soma_Valores_Pesquisados = 0;
+    for (let i = 1; i <= quantidade_Postos; i++) {
+        let preco_Posto = parseFloat(prompt(`Digite o valor encontrado (em R$) no posto ${i}`));
+        preco_Posto = checkIsNumber(preco_Posto, `Digite o valor encontrado (em R$) no posto ${i}`);
+        if (i === 1 || preco_Posto < menor_Valor_Pesquisado) {
+            menor_Valor_Pesquisado = preco_Posto;
+        }
+        soma_Valores_Pesquisados += preco_Posto;
+    }
+
+    // A média de valores de preços de combustíveis na região pesquisada
+    let media = soma_Valores_Pesquisados/quantidade_Postos;
+
+    // O gasto diário com combustível para realizar o trajeto
+    let gasto_Diario = 2*(consumo_Necessario_Litros*menor_Valor_Pesquisado);
+
+    const resultadoDiv = document.getElementById("resultado__calc__combustivel");
+
+    resultadoDiv.innerHTML = `
+        <p>O consumo necessário é de: <span>${consumoTexto}</span></p>
+        <p>O menor valor pesquisado foi: <span>R$ ${menor_Valor_Pesquisado.toFixed(2)}</span></p>
+        <p>A média dos valores pesquisados é: <span>R$ ${media.toFixed(2)}</span></p>
+        <p>O gasto diário (ida e volta) é de: <span>R$ ${gasto_Diario.toFixed(2)}</span></p>`;
+    </script>
 </body>
 </html>
